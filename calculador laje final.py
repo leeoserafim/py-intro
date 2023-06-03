@@ -2,6 +2,7 @@ from tkinter import *
 import math
 janela_principal= Tk()
 
+ #listas com valores e entradas, todas as listas possuem a mesma quantidade de itens
 quantidade=[]
 tamanho=[]
 metro_linear=[]
@@ -12,28 +13,25 @@ reforco_dez=[]
 reforco_doze=[]
 reforco_dezesseis=[]
 
-
+#função apenas pra mostras as vigas no listbox do tkinter
 def vigas_visual():
-    
+    #calculo da quantidade de vigas, checkbox para retirar 1 viga da conta caso seja preciso
     quantidade_vg=float(vigas_entry.get())
     
     if (varvg.get() == 1):
         q_vg=math.floor(quantidade_vg / 0.43)
-        quantidade.append(q_vg)
+        quantidade.append(q_vg)#salva esse valor na lista 
     else:
         q_vg=int(quantidade_vg / 0.43)+1
-        quantidade.append(q_vg)
-
-
-    
+        quantidade.append(q_vg)#salva esse valor na lista 
 
     tamanho_vg=float(tamanho_entry.get())
-    tamanho.append(tamanho_vg)
-
+    tamanho.append(tamanho_vg)#salva esse valor na lista 
+    #calculo do metro linear de acordo com a quantidade de viga resultante da conta vezes o tamanho das vigas informado no entry
     ml=float(q_vg*tamanho_vg)
-    metro_linear.append(ml)
+    metro_linear.append(ml)#salva esse valor na lista 
 
-    
+    #obtenção dos valores dos reforços adicionados nos entrys
     reforco_cinco_vg=int(cinco_mm_entry.get())
     reforco_seis_vg=int(seis_mm_entry.get())
     reforco_oito_vg=int(oito_mm_entry.get())
@@ -41,18 +39,21 @@ def vigas_visual():
     reforco_doze_vg=int(doze_mm_entry.get())
     reforco_dezesseis_vg=int(dezesseis_mm_entry.get())
 
+    #soma de todos os reforços, se a soma for 0 nao precis adicionar nenhum reforço no listbox
     zero=reforco_cinco_vg+reforco_seis_vg+reforco_oito_vg+reforco_dez_vg+reforco_doze_vg+reforco_dezesseis_vg
 
     if zero==0:
         lista_vigas.insert('end',f'{q_vg} VG = {tamanho_vg} m ')
+        varvg.set(0)
 
-
+    #se entry do reforço de 5mm for diferente de 0 executa esse if
     if reforco_cinco_vg != 0:
-        lista_vigas.insert('end',f'{q_vg} VG = {tamanho_vg} m  {reforco_cinco_vg:.0f}br 5mm')
-        ml_cinco=(q_vg*tamanho_vg)*reforco_cinco_vg
-        reforco_cinco.append(ml_cinco)
-        cinco_mm_entry.delete(0,END)
-        cinco_mm_entry.insert(0,'0') 
+        lista_vigas.insert('end',f'{q_vg} VG = {tamanho_vg} m  {reforco_cinco_vg:.0f}br 5mm')#adiciona um item a listbox
+        ml_cinco=(q_vg*tamanho_vg)*reforco_cinco_vg #faz a conta do metro linear do reforço(quantidade de barras adicionadas na entry vezes metro linear viga(quantidade X tamanho)
+        reforco_cinco.append(ml_cinco) #adiciona esse metro linear de reforço na lista do reforço
+        cinco_mm_entry.delete(0,END) #reseta entry para 0
+        cinco_mm_entry.insert(0,'0') #reseta entry para 0
+        varvg.set(0) #desmarca o checkbox
     else :
         reforco_cinco.append(0)
         
@@ -63,6 +64,7 @@ def vigas_visual():
         reforco_seis.append(ml_seis)
         seis_mm_entry.delete(0,END)
         seis_mm_entry.insert(0,'0')
+        varvg.set(0)
     else :
         reforco_seis.append(0)
 
@@ -73,6 +75,7 @@ def vigas_visual():
         reforco_oito.append(ml_oito)
         oito_mm_entry.delete(0,END)
         oito_mm_entry.insert(0,'0')
+        varvg.set(0)
     else :
         reforco_oito.append(0)
     
@@ -83,6 +86,7 @@ def vigas_visual():
         reforco_dez.append(ml_dez)
         dez_mm_entry.delete(0,END)
         dez_mm_entry.insert(0,'0')
+        varvg.set(0)
     else :
         reforco_dez.append(0)
     
@@ -93,6 +97,7 @@ def vigas_visual():
         reforco_doze.append(ml_doze)
         doze_mm_entry.delete(0,END)
         doze_mm_entry.insert(0,'0')
+        varvg.set(0)
     else :
         reforco_doze.append(0)
 
@@ -103,6 +108,7 @@ def vigas_visual():
         reforco_dezesseis.append(ml_dezesseis)
         dezesseis_mm_entry.delete(0,END)
         dezesseis_mm_entry.insert(0,'0')
+        varvg.set(0)
     else :
         reforco_dezesseis.append(0)
 
@@ -153,7 +159,7 @@ def salvar():
                     \n16mm= {r_dezesseis:.2f}')
     
     with open(f'{nome_entry.get()}.txt','x') as salvar:
-        salvar.write(f'Cliente: {nome_entry.get()}\nCPF: {cpf_entry.get()}\nContato:\nMetro quadrado total = {area:.2f}\nMetro linear total= {ml_total:.2f}\nQuantidade de EPS= {ml_total:.1f}\nQuantidade de TAVELA= {tavela}\nQuantidade de malhas: {malha:.0f}\n\nReforços:\n5mm={r_cinco:.2f}\n6mm(1/4)= {r_seis:.2f}\n8mm(5/16)= {r_oito:.2f}\n10mm(3/8)= {r_dez:.2f}\n12,5mm(1/2)= {r_doze:.2f} \
+        salvar.write(f'Cliente: {nome_entry.get()}\nCPF: {cpf_entry.get()}\nContato: {telefone_entry}\nEndereço: {endereco_entry}\nMetro quadrado total = {area:.2f}\nMetro linear total= {ml_total:.2f}\nQuantidade de EPS= {ml_total:.1f}\nQuantidade de TAVELA= {tavela}\nQuantidade de malhas: {malha:.0f}\n\nReforços:\n5mm={r_cinco:.2f}\n6mm(1/4)= {r_seis:.2f}\n8mm(5/16)= {r_oito:.2f}\n10mm(3/8)= {r_dez:.2f}\n12,5mm(1/2)= {r_doze:.2f} \
                         \n16mm= {r_dezesseis:.2f}\n\nLISTA DE VIGAS:\n\n')
         lv=lista_vigas.get(0,END)
         lv_lista=list(lv)
